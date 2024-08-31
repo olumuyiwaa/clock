@@ -1,17 +1,13 @@
 # clock_app
 
-A new Flutter project.
+https://github.com/user-attachments/assets/4cf95cf8-15bd-4f2d-b115-d17e5fc9a790
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A mobile clock screen(digital and analog) which:
+- Detects and display the local time and time zone zone
+- Detects and display the UTC time
+- Calculates the next leap year
+- Displays a leap year compass
+- Calculates and display the current moon phase putting in to concideration all 8 eight moon phases
+- Calculates and display the Last & Next Newmoon dates(Month and Day)
+- Calculates and display the Last & Next Fullmoon date (Month and Day)
 # clock
