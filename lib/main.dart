@@ -188,9 +188,9 @@ class _ClockState extends State<Clock> {
             'Time',
             style: TextStyle(color: Colors.orangeAccent),
           ),
-          backgroundColor: const Color(0xFF2A292A),
+          backgroundColor: Colors.white,
         ),
-        backgroundColor: const Color(0xFF2A292A),
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             Container(
@@ -238,7 +238,7 @@ class _ClockState extends State<Clock> {
                           Text(
                             "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}",
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: Color(0xFF2A292A),
                               fontSize: 80,
                             ),
                           ),
@@ -254,7 +254,7 @@ class _ClockState extends State<Clock> {
                                       .toString()
                                       .padLeft(2, '0'),
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Color(0xFF2A292A),
                                     fontSize: 24,
                                   ),
                                 ),
@@ -301,7 +301,7 @@ class _ClockState extends State<Clock> {
                             Text(
                               "${_currentTime.toUtc().hour.toString().padLeft(2, '0')}:${_currentTime.toUtc().minute.toString().padLeft(2, '0')}",
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF2A292A),
                                 fontSize: 24,
                               ),
                             ),
@@ -328,7 +328,7 @@ class _ClockState extends State<Clock> {
                                 Text(
                                   "${_getNextLeapYear(DateTime.now().year + 1)}",
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Color(0xFF2A292A),
                                     fontSize: 24,
                                   ),
                                 ),

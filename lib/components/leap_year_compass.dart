@@ -24,7 +24,7 @@ class LeapYearCompassPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Colors.white
+      ..color = Color(0xFF2A292A)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.2;
 
@@ -32,7 +32,7 @@ class LeapYearCompassPainter extends CustomPainter {
     final double centerY = size.height / 2;
     final double radius = min(centerX, centerY) - 17;
 
-    const double angleIncrement = 2 * pi / 4; // 4 points (1, 2, 3, L)
+    const double angleIncrement = 2 * pi / 4; // 4 points (L, 1, 2, 3)
     final List<String> points = ['L', '1', '2', '3'];
 
     // Determine the pointer angle based on the year
@@ -53,7 +53,7 @@ class LeapYearCompassPainter extends CustomPainter {
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
           text: points[i],
-          style: TextStyle(color: Colors.white, fontSize: 14),
+          style: TextStyle(color: Color(0xFF2A292A), fontSize: 14),
         ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
@@ -71,7 +71,7 @@ class LeapYearCompassPainter extends CustomPainter {
     while (!isLeapYear(year - yearsSinceLeap)) {
       yearsSinceLeap++;
     }
-    return yearsSinceLeap % 4; // To map it between 0 to 3
+    return yearsSinceLeap % 4; // Map it between 0 to 3
   }
 
   // Draw the pointer with an arrowhead

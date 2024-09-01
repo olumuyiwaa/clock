@@ -24,8 +24,8 @@ class BottomCards extends StatelessWidget {
     return Column(
       children: [
         Image(
-          height: 40,
-          width: 40,
+          height: 48,
+          width: 48,
           image: AssetImage('assets/$icon'),
         ),
         SizedBox(height: 8),
@@ -35,16 +35,16 @@ class BottomCards extends StatelessWidget {
               children: [
                 Text(
                   lastMonth,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyle(color: Color(0xFF2A292A), fontSize: 14),
                 ),
                 Text(
                   lastDay,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyle(color: Color(0xFF2A292A), fontSize: 14),
                 ),
                 Text(
                   lastTitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: Color(0xFF2A292A), fontSize: 12),
                 ),
               ],
             ),

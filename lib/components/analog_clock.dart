@@ -57,7 +57,7 @@ class ClockPainter extends CustomPainter {
   void _drawClockCircle(
       Canvas canvas, Size size, Paint paint, double center, double radius) {
     paint.strokeWidth = 2;
-    paint.color = Colors.white;
+    paint.color = Color(0xFF2A292A);
     canvas.drawCircle(Offset(center, center), radius, paint);
   }
 
@@ -70,7 +70,7 @@ class ClockPainter extends CustomPainter {
     }
 
     paint.strokeWidth = 2;
-    paint.color = Colors.white.withOpacity(0.6);
+    paint.color = Color(0xFF2A292A).withOpacity(0.6);
     for (int i = 0; i < 60; i++) {
       final angle = i * pi / 30;
       if (i % 5 != 0) {
@@ -100,11 +100,11 @@ class ClockPainter extends CustomPainter {
     final hoursAngle = (now.hour % 12 + now.minute / 60) * 30.0;
 
     paint.strokeWidth = 6;
-    paint.color = Colors.white;
+    paint.color = Color(0xFF2A292A);
     _drawHand(canvas, paint, center, radius, hoursAngle, 0.5);
 
     paint.strokeWidth = 4;
-    paint.color = Colors.white;
+    paint.color = Color(0xFF2A292A);
     _drawHand(canvas, paint, center, radius, minutesAngle, 0.7);
 
     paint.strokeWidth = 2;
@@ -118,11 +118,15 @@ class ClockPainter extends CustomPainter {
         center + radius * lengthMultiplier * cos((angle - 90) * pi / 180);
     final endY =
         center + radius * lengthMultiplier * sin((angle - 90) * pi / 180);
+
     canvas.drawLine(
       Offset(center, center),
       Offset(endX, endY),
       paint,
     );
+
+    // Add a small circle at the center to enhance the appearance
+    canvas.drawCircle(Offset(center, center), 2, paint);
   }
 
   void _drawMoonPhaseImage(
