@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:clock_app/components/bottom_cards.dart';
-
+import 'components/bottom_cards.dart';
 import 'components/analog_clock.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
