@@ -139,8 +139,8 @@ class ClockPainter extends CustomPainter {
         ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
       final Rect rect = Rect.fromCenter(
           center: Offset(center, center + radius * 0.5),
-          width: radius * 0.3,
-          height: radius * 0.3);
+          width: radius * 0.36,
+          height: radius * 0.36);
 
       canvas.drawImageRect(
         imageInfo.image,
