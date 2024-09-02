@@ -214,7 +214,7 @@ class ClockPainter extends CustomPainter {
     final rect = Rect.fromCenter(
       center: Offset(
           offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
-      width: textPainter.width + 12, // Adjust the width of the frame (padding)
+      width: textPainter.width + 16, // Adjust the width of the frame (padding)
       height:
           textPainter.height + 8, // Adjust the height of the frame (padding)
     );
@@ -264,7 +264,7 @@ class ClockPainter extends CustomPainter {
     final rect = Rect.fromCenter(
       center: Offset(
           offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
-      width: textPainter.width + 12, // Adjust the width of the frame (padding)
+      width: textPainter.width + 16, // Adjust the width of the frame (padding)
       height:
           textPainter.height + 8, // Adjust the height of the frame (padding)
     );
