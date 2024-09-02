@@ -45,11 +45,42 @@ class ClockPainter extends CustomPainter {
 
     final center = size.width / 2;
     final radius = min(size.width / 1.2, size.height / 1.2);
+    String date = DateTime.now().day.toString();
+    List<String> monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
+    String month = monthNames[DateTime.now().month - 1];
+    List<String> weekdayNames = [
+      "Mon",
+      "Tues",
+      "Weds",
+      "Thus",
+      "Fri",
+      "Sat",
+      "Sun"
+    ];
+
+    String weekday = weekdayNames[DateTime.now().weekday - 1];
+    String day = '$weekday $date';
 
     _drawClockCircle(canvas, size, paint, center, radius);
     _drawClockTicks(canvas, size, paint, center, radius);
-    _drawMoonPhaseImage(
-        canvas, size, center, radius); // Draw the moon phase image first
+    _drawMoonPhaseImage(canvas, size, center, radius);
+    _drawMonth(canvas, size, center, radius, month);
+    _drawDay(
+        canvas, size, center, radius, day); // Draw the moon phase image first
     _drawClockHands(
         canvas, size, paint, center, radius); // Draw the clock hands last
   }
@@ -150,6 +181,106 @@ class ClockPainter extends CustomPainter {
         Paint(),
       );
     }));
+  }
+
+  void _drawDay(
+      Canvas canvas, Size size, double center, double radius, String day) {
+    // Create a TextSpan to represent the text you want to draw.
+    final textSpan = TextSpan(
+      text: day,
+      style: TextStyle(
+        color: Color(0xFF2A292A), // Set the color of the text
+        fontSize: radius * 0.10, // Adjust the font size relative to the radius
+        fontWeight: FontWeight.bold, // Set the font weight (optional)
+      ),
+    );
+
+    // Use a TextPainter to layout and draw the text on the canvas.
+    final textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    // Layout the text to determine its size
+    textPainter.layout();
+
+    // Calculate the position where you want to draw the text
+    final offsetX = center * 1.9 - textPainter.width / 2;
+    final offsetY = center * 0.19 + radius * 0.5 - textPainter.height / 2;
+    final offset = Offset(offsetX, offsetY);
+
+    // Define the rectangle that will serve as the frame
+    final rect = Rect.fromCenter(
+      center: Offset(
+          offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
+      width: textPainter.width + 12, // Adjust the width of the frame (padding)
+      height:
+          textPainter.height + 8, // Adjust the height of the frame (padding)
+    );
+
+    // Draw the blue background with rounded corners
+    final paint = Paint()
+      ..color = Colors.orangeAccent
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(4)), // Border radius of 4
+      paint,
+    );
+
+    // Draw the text on top of the background
+    textPainter.paint(canvas, offset);
+  }
+
+  void _drawMonth(
+      Canvas canvas, Size size, double center, double radius, String month) {
+    // Create a TextSpan to represent the text you want to draw.
+    final textSpan = TextSpan(
+      text: month,
+      style: TextStyle(
+        color: Color(0xFF2A292A), // Set the color of the text
+        fontSize: radius * 0.10, // Adjust the font size relative to the radius
+        fontWeight: FontWeight.bold, // Set the font weight (optional)
+      ),
+    );
+
+    // Use a TextPainter to layout and draw the text on the canvas.
+    final textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    // Layout the text to determine its size
+    textPainter.layout();
+
+    // Calculate the position where you want to draw the text
+    final offsetX = center * 0.2 - textPainter.width / 2;
+    final offsetY = center * 0.19 + radius * 0.5 - textPainter.height / 2;
+    final offset = Offset(offsetX, offsetY);
+
+    // Define the rectangle that will serve as the frame
+    final rect = Rect.fromCenter(
+      center: Offset(
+          offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
+      width: textPainter.width + 12, // Adjust the width of the frame (padding)
+      height:
+          textPainter.height + 8, // Adjust the height of the frame (padding)
+    );
+
+    // Draw the blue background with rounded corners
+    final paint = Paint()
+      ..color = Colors.orangeAccent
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(4)), // Border radius of 4
+      paint,
+    );
+
+    // Draw the text on top of the background
+    textPainter.paint(canvas, offset);
   }
 
   String _getMoonImagePath() {
