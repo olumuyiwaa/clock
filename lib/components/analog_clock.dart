@@ -294,7 +294,7 @@ class ClockPainter extends CustomPainter {
       case 3:
         return 'assets/waxing_gibbous.png';
       case 4:
-        return 'assets/full_moon.png';
+        return 'assets/full_moon1.png';
       case 5:
         return 'assets/waning_gibbous.png';
       case 6:
