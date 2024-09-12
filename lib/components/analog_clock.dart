@@ -63,13 +63,13 @@ class ClockPainter extends CustomPainter {
 
     String month = monthNames[DateTime.now().month - 1];
     List<String> weekdayNames = [
-      "Mon",
-      "Tues",
-      "Weds",
-      "Thus",
-      "Fri",
-      "Sat",
-      "Sun"
+      "MON",
+      "TUE",
+      "WED",
+      "THU",
+      "FRI",
+      "SAT",
+      "SUN"
     ];
 
     String weekday = weekdayNames[DateTime.now().weekday - 1];
