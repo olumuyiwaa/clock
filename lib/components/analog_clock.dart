@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 class AnalogClock extends StatefulWidget {
   final int moonPhase;
@@ -45,82 +46,41 @@ class ClockPainter extends CustomPainter {
 
     final center = size.width / 2;
     final radius = min(size.width / 1.2, size.height / 1.2);
-    String date = DateTime.now().day.toString();
-    List<String> monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-
-    String month = monthNames[DateTime.now().month - 1];
-    List<String> weekdayNames = [
-      "MON",
-      "TUE",
-      "WED",
-      "THU",
-      "FRI",
-      "SAT",
-      "SUN"
-    ];
-
-    String weekday = weekdayNames[DateTime.now().weekday - 1];
-    String day = '$weekday $date';
 
     _drawClockCircle(canvas, size, paint, center, radius);
-    _drawClockTicks(canvas, size, paint, center, radius);
     _drawMoonPhaseImage(canvas, size, center, radius);
-    _drawMonth(canvas, size, center, radius, month);
-    _drawDay(
-        canvas, size, center, radius, day); // Draw the moon phase image first
-    _drawClockHands(
-        canvas, size, paint, center, radius); // Draw the clock hands last
+    _drawWeekday(canvas, center, radius, paint);
+    _drawDay(canvas, center, radius, paint);
+    _drawClockHands(canvas, size, paint, center, radius);
   }
 
   void _drawClockCircle(
       Canvas canvas, Size size, Paint paint, double center, double radius) {
+    // Load the background image
+    final backgroundImage = AssetImage('assets/watchface.png');
+    final imageStream = backgroundImage.resolve(ImageConfiguration.empty);
+
+    imageStream.addListener(
+        ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
+      // Define the rectangle that will contain the background image
+      final Rect rect = Rect.fromCenter(
+          center: Offset(center, center),
+          width: radius * 2,
+          height: radius * 2);
+
+      // Draw the background image
+      canvas.drawImageRect(
+        imageInfo.image,
+        Rect.fromLTWH(0, 0, imageInfo.image.width.toDouble(),
+            imageInfo.image.height.toDouble()),
+        rect,
+        Paint(),
+      );
+    }));
+
     paint.strokeWidth = 2;
     paint.color = Color(0xFF2A292A);
     canvas.drawCircle(Offset(center, center), radius, paint);
-  }
-
-  void _drawClockTicks(
-      Canvas canvas, Size size, Paint paint, double center, double radius) {
-    paint.strokeWidth = 6;
-    for (int i = 0; i < 12; i++) {
-      final angle = i * pi / 6;
-      _drawTick(canvas, paint, center, radius, angle, 0.9, 0.8);
-    }
-
-    paint.strokeWidth = 2;
-    paint.color = Color(0xFF2A292A).withOpacity(0.6);
-    for (int i = 0; i < 60; i++) {
-      final angle = i * pi / 30;
-      if (i % 5 != 0) {
-        _drawTick(canvas, paint, center, radius, angle, 0.95, 0.9);
-      }
-    }
-  }
-
-  void _drawTick(Canvas canvas, Paint paint, double center, double radius,
-      double angle, double startMultiplier, double endMultiplier) {
-    final tickStartX = center + radius * startMultiplier * cos(angle - pi / 2);
-    final tickStartY = center + radius * startMultiplier * sin(angle - pi / 2);
-    final tickEndX = center + radius * endMultiplier * cos(angle - pi / 2);
-    final tickEndY = center + radius * endMultiplier * sin(angle - pi / 2);
-    canvas.drawLine(
-      Offset(tickStartX, tickStartY),
-      Offset(tickEndX, tickEndY),
-      paint,
-    );
   }
 
   void _drawClockHands(
@@ -130,34 +90,37 @@ class ClockPainter extends CustomPainter {
     final minutesAngle = (now.minute + now.second / 60) * 6.0;
     final hoursAngle = (now.hour % 12 + now.minute / 60) * 30.0;
 
-    paint.strokeWidth = 6;
-    paint.color = Color(0xFF2A292A);
-    _drawHand(canvas, paint, center, radius, hoursAngle, 0.5);
-
-    paint.strokeWidth = 4;
-    paint.color = Color(0xFF2A292A);
-    _drawHand(canvas, paint, center, radius, minutesAngle, 0.7);
-
-    paint.strokeWidth = 2;
-    paint.color = Colors.orangeAccent;
-    _drawHand(canvas, paint, center, radius, secondsAngle, 0.9);
-  }
-
-  void _drawHand(Canvas canvas, Paint paint, double center, double radius,
-      double angle, double lengthMultiplier) {
-    final endX =
-        center + radius * lengthMultiplier * cos((angle - 90) * pi / 180);
-    final endY =
-        center + radius * lengthMultiplier * sin((angle - 90) * pi / 180);
-
-    canvas.drawLine(
-      Offset(center, center),
-      Offset(endX, endY),
+    paint.color = Color(0xFFC0C0C0);
+    _drawPointer(
+      canvas,
+      Offset(100, center),
+      hoursAngle,
+      radius * 0.6, // length
+      8, // base width
+      1, // tip width
       paint,
     );
 
-    // Add a small circle at the center to enhance the appearance
-    canvas.drawCircle(Offset(center, center), 2, paint);
+    paint.color = Color(0xFFC0C0C0);
+    _drawPointer(
+      canvas,
+      Offset(100, center),
+      minutesAngle,
+      radius * 0.92, // length
+      8, // base width
+      1, // tip width
+      paint,
+    );
+    paint.color = Colors.orangeAccent;
+    _drawPointer(
+      canvas,
+      Offset(100, center),
+      secondsAngle,
+      radius, // length
+      4, // base width
+      1.0, // tip width
+      paint,
+    );
   }
 
   void _drawMoonPhaseImage(
@@ -169,9 +132,9 @@ class ClockPainter extends CustomPainter {
     imageStream.addListener(
         ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
       final Rect rect = Rect.fromCenter(
-          center: Offset(center, center + radius * 0.5),
-          width: radius * 0.36,
-          height: radius * 0.36);
+          center: Offset(center, center + radius * 0.26),
+          width: radius * 0.32,
+          height: radius * 0.32);
 
       canvas.drawImageRect(
         imageInfo.image,
@@ -183,104 +146,85 @@ class ClockPainter extends CustomPainter {
     }));
   }
 
-  void _drawDay(
-      Canvas canvas, Size size, double center, double radius, String day) {
-    // Create a TextSpan to represent the text you want to draw.
-    final textSpan = TextSpan(
-      text: day,
-      style: TextStyle(
-        color: Color(0xFF2A292A), // Set the color of the text
-        fontSize: radius * 0.10, // Adjust the font size relative to the radius
-        fontWeight: FontWeight.bold, // Set the font weight (optional)
-      ),
-    );
+  void _drawDay(Canvas canvas, double center, double radius, Paint paint) {
+    final now = DateTime.now();
+    final dayAngle = (now.day) * (360 / 31);
+    paint.color = Color(0xFF888989); // Color for the day pointer
 
-    // Use a TextPainter to layout and draw the text on the canvas.
-    final textPainter = TextPainter(
-      text: textSpan,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-
-    // Layout the text to determine its size
-    textPainter.layout();
-
-    // Calculate the position where you want to draw the text
-    final offsetX = center * 1.9 - textPainter.width / 2;
-    final offsetY = center * 0.19 + radius * 0.5 - textPainter.height / 2;
-    final offset = Offset(offsetX, offsetY);
-
-    // Define the rectangle that will serve as the frame
-    final rect = Rect.fromCenter(
-      center: Offset(
-          offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
-      width: textPainter.width + 16, // Adjust the width of the frame (padding)
-      height:
-          textPainter.height + 8, // Adjust the height of the frame (padding)
-    );
-
-    // Draw the blue background with rounded corners
-    final paint = Paint()
-      ..color = Colors.orangeAccent
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, Radius.circular(4)), // Border radius of 4
+    // Position the day pointer on the right
+    final dayCenterX = center + radius * 0.48; // Shift to the right
+    _drawPointer(
+      canvas,
+      Offset(dayCenterX, center),
+      dayAngle,
+      radius * 0.28, // length
+      8, // base width
+      1, // tip width
       paint,
     );
-
-    // Draw the text on top of the background
-    textPainter.paint(canvas, offset);
   }
 
-  void _drawMonth(
-      Canvas canvas, Size size, double center, double radius, String month) {
-    // Create a TextSpan to represent the text you want to draw.
-    final textSpan = TextSpan(
-      text: month,
-      style: TextStyle(
-        color: Color(0xFF2A292A), // Set the color of the text
-        fontSize: radius * 0.10, // Adjust the font size relative to the radius
-        fontWeight: FontWeight.bold, // Set the font weight (optional)
-      ),
-    );
+  void _drawWeekday(Canvas canvas, double center, double radius, Paint paint) {
+    final now = DateTime.now();
+    final weekdayAngle = (now.weekday) * (360 / 7);
+    paint.color = Color(0xFF888989); // Color for the weekday pointer
 
-    // Use a TextPainter to layout and draw the text on the canvas.
-    final textPainter = TextPainter(
-      text: textSpan,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-
-    // Layout the text to determine its size
-    textPainter.layout();
-
-    // Calculate the position where you want to draw the text
-    final offsetX = center * 0.2 - textPainter.width / 2;
-    final offsetY = center * 0.19 + radius * 0.5 - textPainter.height / 2;
-    final offset = Offset(offsetX, offsetY);
-
-    // Define the rectangle that will serve as the frame
-    final rect = Rect.fromCenter(
-      center: Offset(
-          offsetX + textPainter.width / 2, offsetY + textPainter.height / 2),
-      width: textPainter.width + 16, // Adjust the width of the frame (padding)
-      height:
-          textPainter.height + 8, // Adjust the height of the frame (padding)
-    );
-
-    // Draw the blue background with rounded corners
-    final paint = Paint()
-      ..color = Colors.orangeAccent
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, Radius.circular(4)), // Border radius of 4
+    // Position the weekday pointer on the left
+    final weekdayCenterX = center - radius * 0.48; // Shift to the left
+    _drawPointer(
+      canvas,
+      Offset(weekdayCenterX, center),
+      weekdayAngle,
+      radius * 0.28, // length
+      8, // base width
+      1, // tip width
       paint,
     );
+  }
 
-    // Draw the text on top of the background
-    textPainter.paint(canvas, offset);
+  void _drawPointer(
+    Canvas canvas,
+    Offset center,
+    double angle,
+    double length,
+    double baseWidth,
+    double tipWidth,
+    Paint paint,
+  ) {
+    paint.style = PaintingStyle.fill;
+
+    // Convert angle to radians and adjust for clock orientation
+    final angleRad = (angle - 90) * pi / 180;
+
+    // Calculate the points for the clock hand shape
+    final point1 = Offset(
+      center.dx + (baseWidth / 2) * cos(angleRad + pi / 2),
+      center.dy + (baseWidth / 2) * sin(angleRad + pi / 2),
+    );
+
+    final point2 = Offset(
+      center.dx + (baseWidth / 2) * cos(angleRad - pi / 2),
+      center.dy + (baseWidth / 2) * sin(angleRad - pi / 2),
+    );
+
+    final tipPoint = Offset(
+      center.dx + length * cos(angleRad),
+      center.dy + length * sin(angleRad),
+    );
+
+    // Create a path for the tapered clock hand
+    final path = Path()
+      ..moveTo(point1.dx, point1.dy)
+      ..lineTo(point2.dx, point2.dy)
+      ..lineTo(tipPoint.dx, tipPoint.dy)
+      ..close();
+
+    // Draw the clock hand
+    canvas.drawPath(path, paint);
+
+    // Draw a circle at the pivot point
+    paint.color = paint.color.withOpacity(0.8);
+    canvas.drawCircle(center, baseWidth * 0.8, paint);
   }
 
   String _getMoonImagePath() {

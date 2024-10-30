@@ -70,6 +70,7 @@ flutter:
     - assets/waning_crescent.png
     - assets/new_moon1.png
     - assets/full_moon1.png
+    - assets/watchface.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
