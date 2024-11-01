@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class AnalogClock extends StatefulWidget {
-  final int moonPhase;
-
-  const AnalogClock({super.key, required this.moonPhase});
+  const AnalogClock({
+    super.key,
+  });
 
   @override
   _AnalogClockState createState() => _AnalogClockState();
@@ -27,16 +27,12 @@ class _AnalogClockState extends State<AnalogClock> {
         height: 320,
         child: CustomPaint(
           size: const Size(200, 200),
-          painter: ClockPainter(moonPhase: widget.moonPhase),
+          painter: ClockPainter(),
         ));
   }
 }
 
 class ClockPainter extends CustomPainter {
-  final int moonPhase;
-
-  ClockPainter({required this.moonPhase});
-
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -48,10 +44,38 @@ class ClockPainter extends CustomPainter {
     final radius = min(size.width / 1.2, size.height / 1.2);
 
     _drawClockCircle(canvas, size, paint, center, radius);
-    _drawMoonPhaseImage(canvas, size, center, radius);
+    _drawMonthIndicator(canvas, center, radius, paint);
     _drawWeekday(canvas, center, radius, paint);
     _drawDay(canvas, center, radius, paint);
     _drawClockHands(canvas, size, paint, center, radius);
+  }
+
+  void _drawMonthIndicator(
+      Canvas canvas, double center, double radius, Paint paint) {
+    final now = DateTime.now();
+    // Calculate the angle for the current month
+    final monthAngle = (now.month - 3) * (360 / 12);
+
+    final indicatorLength = radius * 0.75;
+    final arcRadius = 10.0;
+
+    final arcCenter = Offset(
+      center + indicatorLength * cos(monthAngle * pi / 180),
+      center + indicatorLength * sin(monthAngle * pi / 180),
+    );
+
+    final rect = Rect.fromCircle(center: arcCenter, radius: arcRadius);
+
+    // Draw the arc
+    paint.color = Colors.red;
+    paint.strokeWidth = 6.0;
+    paint.style = PaintingStyle.stroke;
+
+    final sweepAngle = pi / 5;
+
+    // Draw the arc
+    canvas.drawArc(
+        rect, (monthAngle - 15) * pi / 180, sweepAngle, false, paint);
   }
 
   void _drawClockCircle(
@@ -121,29 +145,6 @@ class ClockPainter extends CustomPainter {
       1.0, // tip width
       paint,
     );
-  }
-
-  void _drawMoonPhaseImage(
-      Canvas canvas, Size size, double center, double radius) {
-    final moonImagePath = _getMoonImagePath();
-    final image = AssetImage(moonImagePath);
-
-    final imageStream = image.resolve(ImageConfiguration.empty);
-    imageStream.addListener(
-        ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
-      final Rect rect = Rect.fromCenter(
-          center: Offset(center, center + radius * 0.26),
-          width: radius * 0.32,
-          height: radius * 0.32);
-
-      canvas.drawImageRect(
-        imageInfo.image,
-        Rect.fromLTWH(0, 0, imageInfo.image.width.toDouble(),
-            imageInfo.image.height.toDouble()),
-        rect,
-        Paint(),
-      );
-    }));
   }
 
   void _drawDay(Canvas canvas, double center, double radius, Paint paint) {
@@ -225,29 +226,6 @@ class ClockPainter extends CustomPainter {
     // Draw a circle at the pivot point
     paint.color = paint.color.withOpacity(0.8);
     canvas.drawCircle(center, baseWidth * 0.8, paint);
-  }
-
-  String _getMoonImagePath() {
-    switch (moonPhase) {
-      case 0:
-        return 'assets/new_moon1.png';
-      case 1:
-        return 'assets/waxing_crescent.png';
-      case 2:
-        return 'assets/first_quarter.png';
-      case 3:
-        return 'assets/waxing_gibbous.png';
-      case 4:
-        return 'assets/full_moon1.png';
-      case 5:
-        return 'assets/waning_gibbous.png';
-      case 6:
-        return 'assets/last_quarter.png';
-      case 7:
-        return 'assets/waning_crescent.png';
-      default:
-        return 'assets/new_moon1.png';
-    }
   }
 
   @override

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
 class BottomCards extends StatelessWidget {
-  final String lastMonth;
-  final String lastDay;
-  final String nextMonth;
-  final String nextDay;
-  final String lastTitle;
-  final String nextTitle;
+  final String? lastMonth;
+  final String? lastDay;
+  final String? nextMonth;
+  final String? nextDay;
+  final String? lastTitle;
+  final String? nextTitle;
   final String icon;
 
   const BottomCards(
       {super.key,
-      required this.lastTitle,
-      required this.nextTitle,
+      this.lastTitle,
+      this.nextTitle,
       required this.icon,
-      required this.lastMonth,
-      required this.lastDay,
-      required this.nextMonth,
-      required this.nextDay});
+      this.lastMonth,
+      this.lastDay,
+      this.nextMonth,
+      this.nextDay});
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +34,15 @@ class BottomCards extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  lastMonth,
+                  lastMonth!,
                   style: TextStyle(color: Color(0xFF2A292A), fontSize: 14),
                 ),
                 Text(
-                  lastDay,
+                  lastDay!,
                   style: TextStyle(color: Color(0xFF2A292A), fontSize: 14),
                 ),
                 Text(
-                  lastTitle,
+                  lastTitle!,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Color(0xFF2A292A), fontSize: 12),
                 ),
@@ -54,15 +54,15 @@ class BottomCards extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  nextMonth,
+                  nextMonth!,
                   style: TextStyle(color: Colors.orangeAccent, fontSize: 14),
                 ),
                 Text(
-                  nextDay,
+                  nextDay!,
                   style: TextStyle(color: Colors.orangeAccent, fontSize: 14),
                 ),
                 Text(
-                  nextTitle,
+                  nextTitle!,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.orangeAccent, fontSize: 12),
                 ),

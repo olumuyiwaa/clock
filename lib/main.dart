@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'components/bottom_cards.dart';
-import 'components/analog_clock.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+
+import 'components/analog_clock.dart';
+import 'components/bottom_cards.dart';
 import 'components/leap_year_compass.dart';
+import 'components/moon_cards.dart';
 
 void main() {
   runApp(const Clock());
@@ -149,7 +152,7 @@ class _ClockState extends State<Clock> {
         ? Text(
             "AM",
             style: TextStyle(
-              color: Colors.orangeAccent,
+              color: Color(0XFFA2811A),
               fontSize: 18,
             ),
           )
@@ -164,7 +167,7 @@ class _ClockState extends State<Clock> {
         ? Text(
             "PM",
             style: TextStyle(
-              color: Colors.orangeAccent,
+              color: Color(0XFFA2811A),
               fontSize: 18,
             ),
           )
@@ -175,6 +178,30 @@ class _ClockState extends State<Clock> {
               fontSize: 18,
             ),
           );
+    String getMoonImagePath() {
+      switch (moonPhase) {
+        case 0:
+          return 'new_moon.png';
+        case 1:
+          return 'waxing_crescent.png';
+        case 2:
+          return 'first_quarter.png';
+        case 3:
+          return 'waxing_gibbous.png';
+        case 4:
+          return 'full_moon.png';
+        case 5:
+          return 'waning_gibbous.png';
+        case 6:
+          return 'last_quarter.png';
+        case 7:
+          return 'waning_crescent.png';
+        default:
+          return 'new_moon.png';
+      }
+    }
+
+    String moonImage = getMoonImagePath();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -182,11 +209,11 @@ class _ClockState extends State<Clock> {
         appBar: AppBar(
           leading: const Icon(
             Icons.menu,
-            color: Colors.orangeAccent,
+            color: Color(0XFFA2811A),
           ),
           title: const Text(
             'Time',
-            style: TextStyle(color: Colors.orangeAccent),
+            style: TextStyle(color: Color(0XFFA2811A)),
           ),
           backgroundColor: Colors.white,
         ),
@@ -195,7 +222,7 @@ class _ClockState extends State<Clock> {
           children: [
             Container(
               height: .5,
-              color: Colors.orangeAccent,
+              color: Color(0XFFA2811A),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 12),
@@ -210,7 +237,7 @@ class _ClockState extends State<Clock> {
                         children: [
                           Icon(
                             Icons.location_pin,
-                            color: Colors.orangeAccent,
+                            color: Color(0XFFA2811A),
                             size: 16,
                           ),
                           SizedBox(
@@ -219,7 +246,7 @@ class _ClockState extends State<Clock> {
                           Text(
                             _currentTime.timeZoneName,
                             style: const TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Color(0XFFA2811A),
                               fontSize: 16,
                             ),
                           ),
@@ -266,7 +293,7 @@ class _ClockState extends State<Clock> {
                                       .toString()
                                       .padLeft(3, '0'),
                                   style: const TextStyle(
-                                    color: Colors.orangeAccent,
+                                    color: Color(0XFFA2811A),
                                     fontSize: 16,
                                   ),
                                 ),
@@ -278,7 +305,7 @@ class _ClockState extends State<Clock> {
                       const Text(
                         "ATOMIC TIME SYNCED",
                         style: TextStyle(
-                          color: Colors.orangeAccent,
+                          color: Color(0XFFA2811A),
                           fontSize: 18,
                         ),
                       ),
@@ -287,7 +314,7 @@ class _ClockState extends State<Clock> {
                   ),
                   Container(
                     height: .5,
-                    color: Colors.orangeAccent,
+                    color: Color(0XFFA2811A),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 24, right: 12),
@@ -308,7 +335,7 @@ class _ClockState extends State<Clock> {
                             const Text(
                               "UTC",
                               style: TextStyle(
-                                color: Colors.orangeAccent,
+                                color: Color(0XFFA2811A),
                                 fontSize: 14,
                               ),
                             ),
@@ -317,7 +344,7 @@ class _ClockState extends State<Clock> {
                         Container(
                           width: .5,
                           height: 78,
-                          color: Colors.orangeAccent,
+                          color: Color(0XFFA2811A),
                         ),
                         Row(
                           children: [
@@ -335,7 +362,7 @@ class _ClockState extends State<Clock> {
                                 const Text(
                                   "NEXT LEAP YEAR",
                                   style: TextStyle(
-                                    color: Colors.orangeAccent,
+                                    color: Color(0XFFA2811A),
                                     fontSize: 14,
                                   ),
                                 ),
@@ -350,38 +377,49 @@ class _ClockState extends State<Clock> {
                   ),
                   Container(
                     height: .5,
-                    color: Colors.orangeAccent,
+                    color: Color(0XFFA2811A),
                   ),
-                  AnalogClock(moonPhase: moonPhase),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: AnalogClock(),
+                  )
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                BottomCards(
-                    lastTitle: 'Last',
-                    nextTitle: 'Next',
-                    icon: 'new_moon.png',
-                    lastMonth: lastNewMoonMonth,
-                    lastDay: lastNewMoonDay,
-                    nextMonth: nextNewMoonMonth,
-                    nextDay: nextNewMoonDay),
-                SizedBox(
-                  width: 72,
-                ),
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.all(24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  BottomCards(
+                      lastTitle: 'Last',
+                      nextTitle: 'Next',
+                      icon: 'new_moon.png',
+                      lastMonth: lastNewMoonMonth,
+                      lastDay: lastNewMoonDay,
+                      nextMonth: nextNewMoonMonth,
+                      nextDay: nextNewMoonDay),
+                  //------------------
+                  MoonCard(
+                    icon: moonImage,
+                  ),
+                  BottomCards(
+                      lastTitle: 'Last',
+                      nextTitle: 'Next',
+                      icon: 'full_moon.png',
+                      lastMonth: lastFullMoonMonth,
+                      lastDay: lastFullMoonDay,
+                      nextMonth: nextFullMoonMonth,
+                      nextDay: nextFullMoonDay),
+                ],
                 //------------------
-                BottomCards(
-                    lastTitle: 'Last',
-                    nextTitle: 'Next',
-                    icon: 'full_moon.png',
-                    lastMonth: lastFullMoonMonth,
-                    lastDay: lastFullMoonDay,
-                    nextMonth: nextFullMoonMonth,
-                    nextDay: nextFullMoonDay)
-              ],
-              //------------------
+              ),
             ),
+            SizedBox(
+              height: 8,
+            )
           ],
         ),
       ),
