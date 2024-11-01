@@ -13,8 +13,8 @@ class MoonCard extends StatelessWidget {
     return Column(
       children: [
         Image(
-          height: 48,
-          width: 48,
+          height: 52,
+          width: 52,
           image: AssetImage('assets/$icon'),
         ),
         SizedBox(height: 8),

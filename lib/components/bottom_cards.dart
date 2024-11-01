@@ -55,16 +55,16 @@ class BottomCards extends StatelessWidget {
               children: [
                 Text(
                   nextMonth!,
-                  style: TextStyle(color: Colors.orangeAccent, fontSize: 14),
+                  style: TextStyle(color: Color(0XFFA2811A), fontSize: 14),
                 ),
                 Text(
                   nextDay!,
-                  style: TextStyle(color: Colors.orangeAccent, fontSize: 14),
+                  style: TextStyle(color: Color(0XFFA2811A), fontSize: 14),
                 ),
                 Text(
                   nextTitle!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.orangeAccent, fontSize: 12),
+                  style: TextStyle(color: Color(0XFFA2811A), fontSize: 12),
                 ),
               ],
             ),
