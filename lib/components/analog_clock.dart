@@ -103,7 +103,7 @@ class ClockPainter extends CustomPainter {
     }));
 
     paint.strokeWidth = 2;
-    paint.color = Color(0xFF2A292A);
+    paint.color = Color(0xFFC0C0C0);
     canvas.drawCircle(Offset(center, center), radius, paint);
   }
 
@@ -120,7 +120,7 @@ class ClockPainter extends CustomPainter {
       Offset(100, center),
       hoursAngle,
       radius * 0.6, // length
-      8, // base width
+      4, // base width
       1, // tip width
       paint,
     );
@@ -131,7 +131,7 @@ class ClockPainter extends CustomPainter {
       Offset(100, center),
       minutesAngle,
       radius * 0.92, // length
-      8, // base width
+      4, // base width
       1, // tip width
       paint,
     );
@@ -141,7 +141,7 @@ class ClockPainter extends CustomPainter {
       Offset(100, center),
       secondsAngle,
       radius, // length
-      4, // base width
+      2, // base width
       1.0, // tip width
       paint,
     );
@@ -150,7 +150,7 @@ class ClockPainter extends CustomPainter {
   void _drawDay(Canvas canvas, double center, double radius, Paint paint) {
     final now = DateTime.now();
     final dayAngle = (now.day) * (360 / 31);
-    paint.color = Color(0xFF888989); // Color for the day pointer
+    paint.color = Color(0xFFC0C0C0); // Color for the day pointer
 
     // Position the day pointer on the right
     final dayCenterX = center + radius * 0.48; // Shift to the right
@@ -159,7 +159,7 @@ class ClockPainter extends CustomPainter {
       Offset(dayCenterX, center),
       dayAngle,
       radius * 0.28, // length
-      8, // base width
+      4, // base width
       1, // tip width
       paint,
     );
@@ -168,7 +168,7 @@ class ClockPainter extends CustomPainter {
   void _drawWeekday(Canvas canvas, double center, double radius, Paint paint) {
     final now = DateTime.now();
     final weekdayAngle = (now.weekday) * (360 / 7);
-    paint.color = Color(0xFF888989); // Color for the weekday pointer
+    paint.color = Color(0xFFC0C0C0); // Color for the weekday pointer
 
     // Position the weekday pointer on the left
     final weekdayCenterX = center - radius * 0.48; // Shift to the left
@@ -177,7 +177,7 @@ class ClockPainter extends CustomPainter {
       Offset(weekdayCenterX, center),
       weekdayAngle,
       radius * 0.28, // length
-      8, // base width
+      4, // base width
       1, // tip width
       paint,
     );
@@ -197,35 +197,50 @@ class ClockPainter extends CustomPainter {
     // Convert angle to radians and adjust for clock orientation
     final angleRad = (angle - 90) * pi / 180;
 
-    // Calculate the points for the clock hand shape
-    final point1 = Offset(
+    // Calculate base points for the clock hand
+    final leftBase = Offset(
       center.dx + (baseWidth / 2) * cos(angleRad + pi / 2),
       center.dy + (baseWidth / 2) * sin(angleRad + pi / 2),
     );
-
-    final point2 = Offset(
+    final rightBase = Offset(
       center.dx + (baseWidth / 2) * cos(angleRad - pi / 2),
       center.dy + (baseWidth / 2) * sin(angleRad - pi / 2),
     );
 
+    // Calculate side control points for a more pronounced curve
+    final leftCurve = Offset(
+      center.dx +
+          (baseWidth * 2.5) * cos(angleRad + pi / 2.8), // Sharper inward angle
+      center.dy + (baseWidth * 2.5) * sin(angleRad + pi / 2.8),
+    );
+    final rightCurve = Offset(
+      center.dx +
+          (baseWidth * 2.5) * cos(angleRad - pi / 2.8), // Sharper inward angle
+      center.dy + (baseWidth * 2.5) * sin(angleRad - pi / 2.8),
+    );
+
+    // Calculate tip point
     final tipPoint = Offset(
       center.dx + length * cos(angleRad),
       center.dy + length * sin(angleRad),
     );
 
-    // Create a path for the tapered clock hand
+    // Create path for ace-like clock hand shape
     final path = Path()
-      ..moveTo(point1.dx, point1.dy)
-      ..lineTo(point2.dx, point2.dy)
-      ..lineTo(tipPoint.dx, tipPoint.dy)
+      ..moveTo(leftBase.dx, leftBase.dy)
+      ..quadraticBezierTo(leftCurve.dx, leftCurve.dy, tipPoint.dx, tipPoint.dy)
+      ..quadraticBezierTo(
+          rightCurve.dx, rightCurve.dy, rightBase.dx, rightBase.dy)
       ..close();
 
     // Draw the clock hand
     canvas.drawPath(path, paint);
 
     // Draw a circle at the pivot point
-    paint.color = paint.color.withOpacity(0.8);
-    canvas.drawCircle(center, baseWidth * 0.8, paint);
+    paint.color;
+    canvas.drawCircle(center, baseWidth * 2, paint);
+    paint.color = Color(0xFF000000);
+    canvas.drawCircle(center, baseWidth / 1.5, paint);
   }
 
   @override

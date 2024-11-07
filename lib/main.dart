@@ -388,7 +388,7 @@ class _ClockState extends State<Clock> {
             ),
             Spacer(),
             Padding(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
