@@ -206,161 +206,135 @@ class _ClockState extends State<Clock> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          leading: const Icon(
-            Icons.menu,
-            color: Color(0XFFA2811A),
-          ),
-          title: const Text(
-            'Time',
-            style: TextStyle(color: Color(0XFFA2811A)),
-          ),
-          backgroundColor: Colors.white,
-        ),
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            Container(
-              height: .5,
+          appBar: AppBar(
+            leading: const Icon(
+              Icons.menu,
               color: Color(0XFFA2811A),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 12),
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+            title: const Text(
+              'Time',
+              style: TextStyle(color: Color(0XFFA2811A)),
+            ),
+            backgroundColor: Colors.white,
+          ),
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  height: .5,
+                  color: Color(0XFFA2811A),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 12),
+                  child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.location_pin,
-                            color: Color(0XFFA2811A),
-                            size: 16,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            _currentTime.timeZoneName,
-                            style: const TextStyle(
-                              color: Color(0XFFA2811A),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [amPmText, pmAmText],
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}",
-                            style: const TextStyle(
-                              color: Color(0xFF2A292A),
-                              fontSize: 80,
-                            ),
-                          ),
-                          SizedBox(width: 12),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                width: 40,
-                                child: Text(
-                                  _currentTime.second
-                                      .toString()
-                                      .padLeft(2, '0'),
-                                  style: const TextStyle(
-                                    color: Color(0xFF2A292A),
-                                    fontSize: 24,
-                                  ),
-                                ),
+                              Icon(
+                                Icons.location_pin,
+                                color: Color(0XFFA2811A),
+                                size: 16,
                               ),
                               SizedBox(
-                                width: 40,
-                                child: Text(
-                                  _currentTime.millisecond
-                                      .toString()
-                                      .padLeft(3, '0'),
-                                  style: const TextStyle(
-                                    color: Color(0XFFA2811A),
-                                    fontSize: 16,
-                                  ),
+                                width: 4,
+                              ),
+                              Text(
+                                _currentTime.timeZoneName,
+                                style: const TextStyle(
+                                  color: Color(0XFFA2811A),
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [amPmText, pmAmText],
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}",
+                                style: const TextStyle(
+                                  color: Color(0xFF2A292A),
+                                  fontSize: 80,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 40,
+                                    child: Text(
+                                      _currentTime.second
+                                          .toString()
+                                          .padLeft(2, '0'),
+                                      style: const TextStyle(
+                                        color: Color(0xFF2A292A),
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 40,
+                                    child: Text(
+                                      _currentTime.millisecond
+                                          .toString()
+                                          .padLeft(3, '0'),
+                                      style: const TextStyle(
+                                        color: Color(0XFFA2811A),
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          const Text(
+                            "ATOMIC TIME SYNCED",
+                            style: TextStyle(
+                              color: Color(0XFFA2811A),
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                         ],
                       ),
-                      const Text(
-                        "ATOMIC TIME SYNCED",
-                        style: TextStyle(
-                          color: Color(0XFFA2811A),
-                          fontSize: 18,
-                        ),
+                      Container(
+                        height: .5,
+                        color: Color(0XFFA2811A),
                       ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                  Container(
-                    height: .5,
-                    color: Color(0XFFA2811A),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, right: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${_currentTime.toUtc().hour.toString().padLeft(2, '0')}:${_currentTime.toUtc().minute.toString().padLeft(2, '0')}",
-                              style: const TextStyle(
-                                color: Color(0xFF2A292A),
-                                fontSize: 24,
-                              ),
-                            ),
-                            const Text(
-                              "UTC",
-                              style: TextStyle(
-                                color: Color(0XFFA2811A),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: .5,
-                          height: 78,
-                          color: Color(0XFFA2811A),
-                        ),
-                        Row(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24, right: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${_getNextLeapYear(DateTime.now().year + 1)}",
+                                  "${_currentTime.toUtc().hour.toString().padLeft(2, '0')}:${_currentTime.toUtc().minute.toString().padLeft(2, '0')}",
                                   style: const TextStyle(
                                     color: Color(0xFF2A292A),
                                     fontSize: 24,
                                   ),
                                 ),
                                 const Text(
-                                  "NEXT LEAP YEAR",
+                                  "UTC",
                                   style: TextStyle(
                                     color: Color(0XFFA2811A),
                                     fontSize: 14,
@@ -368,61 +342,85 @@ class _ClockState extends State<Clock> {
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 20),
-                            LeapYearCompass(),
+                            Container(
+                              width: .5,
+                              height: 78,
+                              color: Color(0XFFA2811A),
+                            ),
+                            Row(
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${_getNextLeapYear(DateTime.now().year + 1)}",
+                                      style: const TextStyle(
+                                        color: Color(0xFF2A292A),
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                    const Text(
+                                      "NEXT LEAP YEAR",
+                                      style: TextStyle(
+                                        color: Color(0XFFA2811A),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 20),
+                                LeapYearCompass(),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        height: .5,
+                        color: Color(0XFFA2811A),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: AnalogClock(),
+                      )
+                    ],
                   ),
-                  Container(
-                    height: .5,
-                    color: Color(0XFFA2811A),
+                ),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      BottomCards(
+                          lastTitle: 'Last',
+                          nextTitle: 'Next',
+                          icon: 'new_moon.png',
+                          lastMonth: lastNewMoonMonth,
+                          lastDay: lastNewMoonDay,
+                          nextMonth: nextNewMoonMonth,
+                          nextDay: nextNewMoonDay),
+                      //------------------
+                      MoonCard(
+                        icon: moonImage,
+                      ),
+                      BottomCards(
+                          lastTitle: 'Last',
+                          nextTitle: 'Next',
+                          icon: 'full_moon.png',
+                          lastMonth: lastFullMoonMonth,
+                          lastDay: lastFullMoonDay,
+                          nextMonth: nextFullMoonMonth,
+                          nextDay: nextFullMoonDay),
+                    ],
+                    //------------------
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: AnalogClock(),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  BottomCards(
-                      lastTitle: 'Last',
-                      nextTitle: 'Next',
-                      icon: 'new_moon.png',
-                      lastMonth: lastNewMoonMonth,
-                      lastDay: lastNewMoonDay,
-                      nextMonth: nextNewMoonMonth,
-                      nextDay: nextNewMoonDay),
-                  //------------------
-                  MoonCard(
-                    icon: moonImage,
-                  ),
-                  BottomCards(
-                      lastTitle: 'Last',
-                      nextTitle: 'Next',
-                      icon: 'full_moon.png',
-                      lastMonth: lastFullMoonMonth,
-                      lastDay: lastFullMoonDay,
-                      nextMonth: nextFullMoonMonth,
-                      nextDay: nextFullMoonDay),
-                ],
-                //------------------
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            )
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

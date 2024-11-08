@@ -33,6 +33,16 @@ class _AnalogClockState extends State<AnalogClock> {
 }
 
 class ClockPainter extends CustomPainter {
+  // Apply gradient
+  final gradient = LinearGradient(
+    colors: [
+      Color(0xFFC0C0C0),
+      Color(0xFF6C6C6C)
+    ], // Replace with your desired colors
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -114,7 +124,6 @@ class ClockPainter extends CustomPainter {
     final minutesAngle = (now.minute + now.second / 60) * 6.0;
     final hoursAngle = (now.hour % 12 + now.minute / 60) * 30.0;
 
-    paint.color = Color(0xFFC0C0C0);
     _drawPointer(
       canvas,
       Offset(100, center),
@@ -125,7 +134,6 @@ class ClockPainter extends CustomPainter {
       paint,
     );
 
-    paint.color = Color(0xFFC0C0C0);
     _drawPointer(
       canvas,
       Offset(100, center),
@@ -135,12 +143,12 @@ class ClockPainter extends CustomPainter {
       1, // tip width
       paint,
     );
-    paint.color = Colors.orangeAccent;
+
     _drawPointer(
       canvas,
       Offset(100, center),
       secondsAngle,
-      radius, // length
+      radius * 0.88, // length
       2, // base width
       1.0, // tip width
       paint,
@@ -209,13 +217,11 @@ class ClockPainter extends CustomPainter {
 
     // Calculate side control points for a more pronounced curve
     final leftCurve = Offset(
-      center.dx +
-          (baseWidth * 2.5) * cos(angleRad + pi / 2.8), // Sharper inward angle
+      center.dx + (baseWidth * 2.5) * cos(angleRad + pi / 2.8),
       center.dy + (baseWidth * 2.5) * sin(angleRad + pi / 2.8),
     );
     final rightCurve = Offset(
-      center.dx +
-          (baseWidth * 2.5) * cos(angleRad - pi / 2.8), // Sharper inward angle
+      center.dx + (baseWidth * 2.5) * cos(angleRad - pi / 2.8),
       center.dy + (baseWidth * 2.5) * sin(angleRad - pi / 2.8),
     );
 
@@ -233,11 +239,16 @@ class ClockPainter extends CustomPainter {
           rightCurve.dx, rightCurve.dy, rightBase.dx, rightBase.dy)
       ..close();
 
+    paint.shader = gradient.createShader(Rect.fromPoints(leftBase, tipPoint));
+
     // Draw the clock hand
     canvas.drawPath(path, paint);
 
+    // Reset shader to null for other elements
+    paint.shader = null;
+
     // Draw a circle at the pivot point
-    paint.color;
+    paint.color = Color(0xFFC0C0C0);
     canvas.drawCircle(center, baseWidth * 2, paint);
     paint.color = Color(0xFF000000);
     canvas.drawCircle(center, baseWidth / 1.5, paint);
