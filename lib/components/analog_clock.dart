@@ -15,6 +15,7 @@ class AnalogClock extends StatefulWidget {
 class _AnalogClockState extends State<AnalogClock> {
   late ui.Image hourHandImage;
   late ui.Image minuteHandImage;
+  late ui.Image dayPointerImage;
 
   @override
   void initState() {
@@ -27,14 +28,15 @@ class _AnalogClockState extends State<AnalogClock> {
   Future<void> _loadImages() async {
     final minuteImage = await loadImage('assets/minute_hand.png');
     final hourImage = await loadImage('assets/hour_hand.png');
+    final dayPointerImage = await loadImage('assets/day_pointer.png');
 
     setState(() {
       hourHandImage = hourImage;
       minuteHandImage = minuteImage;
+      this.dayPointerImage = dayPointerImage;
     });
   }
 
-  // Load an image from assets
   Future<ui.Image> loadImage(String path) async {
     final ByteData data = await rootBundle.load(path);
     final List<int> bytes = data.buffer.asUint8List();
@@ -53,6 +55,7 @@ class _AnalogClockState extends State<AnalogClock> {
         painter: ClockPainter(
           hourHandImage, // Pass hour image
           minuteHandImage, // Pass minute image
+          dayPointerImage, // Pass day pointer image
         ),
       ),
     );
@@ -62,13 +65,12 @@ class _AnalogClockState extends State<AnalogClock> {
 class ClockPainter extends CustomPainter {
   final ui.Image hourHandImage; // Hour hand image
   final ui.Image minuteHandImage; // Minute hand image
+  final ui.Image dayPointerImage;
 
-  ClockPainter(this.hourHandImage, this.minuteHandImage);
-
-  final gradient = LinearGradient(
-    colors: [Color(0xFFC0C0C0), Color(0xFF6C6C6C)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+  ClockPainter(
+    this.hourHandImage,
+    this.minuteHandImage,
+    this.dayPointerImage,
   );
 
   @override
@@ -255,100 +257,109 @@ class ClockPainter extends CustomPainter {
   void _drawDay(Canvas canvas, double center, double radius, Paint paint) {
     final now = DateTime.now();
     final dayAngle = (now.day) * (360 / 31);
-    paint.color = Color(0xFFC0C0C0); // Color for the day pointer
-
-    // Position the day pointer on the right
     final dayCenterX = center + radius * 0.48; // Shift to the right
-    _drawPointer(
+    // Use the day pointer image
+    _drawDatePointer(
       canvas,
       Offset(dayCenterX, center),
       dayAngle,
-      radius * 0.28, // length
-      4, // base width
-      1, // tip width
-      paint,
+      radius * 0.28, // Length
+      4, // Base width
+      dayPointerImage, // Pass the day pointer image
     );
   }
 
   void _drawWeekday(Canvas canvas, double center, double radius, Paint paint) {
     final now = DateTime.now();
     final weekdayAngle = (now.weekday) * (360 / 7);
-    paint.color = Color(0xFFC0C0C0); // Color for the weekday pointer
-
-    // Position the weekday pointer on the left
     final weekdayCenterX = center - radius * 0.48; // Shift to the left
-    _drawPointer(
+    // Use the weekday pointer image
+    _drawWeekdayPointer(
       canvas,
       Offset(weekdayCenterX, center),
       weekdayAngle,
-      radius * 0.28, // length
-      4, // base width
-      2, // tip width
-      paint,
+      radius * 0.28, // Length
+      4, // Base width
+      dayPointerImage, // Pass the weekday pointer image
     );
   }
 
-  void _drawPointer(
+  void _drawWeekdayPointer(
     Canvas canvas,
     Offset center,
     double angle,
     double length,
     double baseWidth,
-    double tipWidth,
-    Paint paint,
+    ui.Image pointerImage, // Image for the pointer
   ) {
-    paint.style = PaintingStyle.fill;
-
-    // Convert angle to radians and adjust for clock orientation
     final angleRad = (angle - 90) * pi / 180;
 
-    // Calculate base points for the clock hand
-    final leftBase = Offset(
-      center.dx + (baseWidth / 2) * cos(angleRad + pi / 2),
-      center.dy + (baseWidth / 2) * sin(angleRad + pi / 2),
-    );
-    final rightBase = Offset(
-      center.dx + (baseWidth / 2) * cos(angleRad - pi / 2),
-      center.dy + (baseWidth / 2) * sin(angleRad - pi / 2),
+    // Calculate the position for the image
+    final imageCenter = Offset(
+      center.dx + (length - pointerImage.height / 2) * cos(angleRad),
+      center.dy + (length - pointerImage.height / 2) * sin(angleRad),
     );
 
-    // Calculate side control points for a more pronounced curve
-    final leftCurve = Offset(
-      center.dx + (baseWidth * 2.5) * cos(angleRad + pi / 2.8),
-      center.dy + (baseWidth * 2.5) * sin(angleRad + pi / 2.8),
+    // Scale the image if needed (optional)
+    final scaleFactor = 1.0;
+    final scaledWidth = pointerImage.width * scaleFactor;
+    final scaledHeight = pointerImage.height * scaleFactor;
+
+    final paintForImage = Paint();
+
+    // Rotate and draw the image at the calculated position
+    canvas.save();
+    canvas.translate(imageCenter.dx, imageCenter.dy);
+    canvas.rotate(angleRad);
+    canvas.scale(scaleFactor);
+
+    // Draw the image centered on the calculated position
+    canvas.drawImage(
+      pointerImage,
+      Offset(-scaledWidth / 2, -scaledHeight / 2),
+      paintForImage,
     );
-    final rightCurve = Offset(
-      center.dx + (baseWidth * 2.5) * cos(angleRad - pi / 2.8),
-      center.dy + (baseWidth * 2.5) * sin(angleRad - pi / 2.8),
+
+    canvas.restore();
+  }
+
+  void _drawDatePointer(
+    Canvas canvas,
+    Offset center,
+    double angle,
+    double length,
+    double baseWidth,
+    ui.Image pointerImage, // Image for the pointer
+  ) {
+    final angleRad = (angle - 90) * pi / 180;
+
+    // Calculate the position for the image
+    final imageCenter = Offset(
+      center.dx + (length - pointerImage.height / 2) * cos(angleRad),
+      center.dy + (length - pointerImage.height / 2) * sin(angleRad),
     );
 
-    // Calculate tip point
-    final tipPoint = Offset(
-      center.dx + length * cos(angleRad),
-      center.dy + length * sin(angleRad),
+    // Scale the image if needed (optional)
+    final scaleFactor = 1.0;
+    final scaledWidth = pointerImage.width * scaleFactor;
+    final scaledHeight = pointerImage.height * scaleFactor;
+
+    final paintForImage = Paint();
+
+    // Rotate and draw the image at the calculated position
+    canvas.save();
+    canvas.translate(imageCenter.dx, imageCenter.dy);
+    canvas.rotate(angleRad);
+    canvas.scale(scaleFactor);
+
+    // Draw the image centered on the calculated position
+    canvas.drawImage(
+      pointerImage,
+      Offset(-scaledWidth / 2, -scaledHeight / 2),
+      paintForImage,
     );
 
-    // Create path for ace-like clock hand shape
-    final path = Path()
-      ..moveTo(leftBase.dx, leftBase.dy)
-      ..quadraticBezierTo(leftCurve.dx, leftCurve.dy, tipPoint.dx, tipPoint.dy)
-      ..quadraticBezierTo(
-          rightCurve.dx, rightCurve.dy, rightBase.dx, rightBase.dy)
-      ..close();
-
-    paint.shader = gradient.createShader(Rect.fromPoints(leftBase, tipPoint));
-
-    // Draw the clock hand
-    canvas.drawPath(path, paint);
-
-    // Reset shader to null for other elements
-    paint.shader = null;
-
-    // Draw a circle at the pivot point
-    paint.color = Color(0xFFC0C0C0);
-    canvas.drawCircle(center, baseWidth * 2, paint);
-    paint.color = Color(0xFF000000);
-    canvas.drawCircle(center, baseWidth / 1.5, paint);
+    canvas.restore();
   }
 
   @override
