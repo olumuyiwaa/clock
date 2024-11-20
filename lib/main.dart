@@ -218,7 +218,8 @@ class _ClockState extends State<Clock> {
           backgroundColor: Colors.white,
         ),
         backgroundColor: Colors.white,
-        body: ListView(
+        body: SafeArea(
+            child: Column(
           children: [
             Container(
               height: .5,
@@ -380,7 +381,7 @@ class _ClockState extends State<Clock> {
                     color: Color(0XFFA2811A),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: 0),
                     child: AnalogClock(),
                   )
                 ],
@@ -388,7 +389,7 @@ class _ClockState extends State<Clock> {
             ),
             Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -418,7 +419,7 @@ class _ClockState extends State<Clock> {
               ),
             ),
           ],
-        ),
+        )),
       ),
     );
   }

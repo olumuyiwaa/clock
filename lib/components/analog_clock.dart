@@ -68,6 +68,16 @@ class _AnalogClockState extends State<AnalogClock> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    hourHandImage.dispose();
+    minuteHandImage.dispose();
+    monthHandImage.dispose();
+    dayPointerImage.dispose();
+    dotImage.dispose();
+    super.dispose();
+  }
 }
 
 class ClockPainter extends CustomPainter {
