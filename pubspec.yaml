@@ -73,6 +73,8 @@ flutter:
     - assets/second_hand.png
     - assets/hour_hand.png
     - assets/day_pointer.png
+    - assets/month_pointer.png
+    - assets/dot.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

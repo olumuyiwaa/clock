@@ -15,7 +15,9 @@ class AnalogClock extends StatefulWidget {
 class _AnalogClockState extends State<AnalogClock> {
   late ui.Image hourHandImage;
   late ui.Image minuteHandImage;
+  late ui.Image monthHandImage;
   late ui.Image dayPointerImage;
+  late ui.Image dotImage;
 
   @override
   void initState() {
@@ -29,11 +31,15 @@ class _AnalogClockState extends State<AnalogClock> {
     final minuteImage = await loadImage('assets/minute_hand.png');
     final hourImage = await loadImage('assets/hour_hand.png');
     final dayPointerImage = await loadImage('assets/day_pointer.png');
+    final monthPointerImage = await loadImage('assets/month_pointer.png');
+    final dotImage = await loadImage('assets/dot.png');
 
     setState(() {
       hourHandImage = hourImage;
       minuteHandImage = minuteImage;
+      monthHandImage = monthPointerImage;
       this.dayPointerImage = dayPointerImage;
+      this.dotImage = dotImage;
     });
   }
 
@@ -53,10 +59,12 @@ class _AnalogClockState extends State<AnalogClock> {
       child: CustomPaint(
         size: const Size(200, 200),
         painter: ClockPainter(
-          hourHandImage, // Pass hour image
-          minuteHandImage, // Pass minute image
-          dayPointerImage, // Pass day pointer image
-        ),
+            hourHandImage, // Pass hour image
+            minuteHandImage, // Pass minute image
+            dayPointerImage,
+            monthHandImage,
+            dotImage // Pass day pointer image
+            ),
       ),
     );
   }
@@ -66,12 +74,11 @@ class ClockPainter extends CustomPainter {
   final ui.Image hourHandImage; // Hour hand image
   final ui.Image minuteHandImage; // Minute hand image
   final ui.Image dayPointerImage;
+  final ui.Image monthHandImage;
+  final ui.Image dotImage;
 
-  ClockPainter(
-    this.hourHandImage,
-    this.minuteHandImage,
-    this.dayPointerImage,
-  );
+  ClockPainter(this.hourHandImage, this.minuteHandImage, this.dayPointerImage,
+      this.monthHandImage, this.dotImage);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -83,42 +90,69 @@ class ClockPainter extends CustomPainter {
     final center = size.width / 2;
     final radius = min(size.width / 1.2, size.height / 1.2);
 
-    _drawClockCircle(canvas, size, paint, center, radius);
-    _drawMonthIndicator(canvas, center, radius, paint);
+    _drawWatchFace(canvas, size, paint, center, radius);
+    // _drawMonthIndicator(canvas, center, radius, paint);
     _drawWeekday(canvas, center, radius, paint);
     _drawDay(canvas, center, radius, paint);
     _drawClockHands(canvas, size, paint, center, radius);
+    _drawCenterDot(canvas, center);
   }
 
-  void _drawMonthIndicator(
-      Canvas canvas, double center, double radius, Paint paint) {
-    final now = DateTime.now();
-    // Calculate the angle for the current month
-    final monthAngle = (now.month - 3) * (360 / 12);
+  void _drawCenterDot(Canvas canvas, double center) {
+    final paintForImage = Paint();
 
-    final indicatorLength = radius * 0.75;
-    final arcRadius = 10.0;
+    // Calculate the position for the image (center of the clock)
+    final imageCenter = Offset(center, center);
 
-    final arcCenter = Offset(
-      center + indicatorLength * cos(monthAngle * pi / 180),
-      center + indicatorLength * sin(monthAngle * pi / 180),
+    // Scale the image if needed (optional)
+    final scaleFactor = .32;
+    final scaledWidth = dotImage.width * scaleFactor;
+    final scaledHeight = dotImage.height * scaleFactor;
+
+    // Rotate and draw the image at the center
+    canvas.save();
+    canvas.translate(imageCenter.dx, imageCenter.dy);
+    canvas.scale(scaleFactor);
+
+    // Draw the dot image centered at the origin (center of the clock)
+    canvas.drawImage(
+      dotImage,
+      Offset(-scaledWidth * 1.5, -scaledHeight * 1.5),
+      paintForImage,
     );
 
-    final rect = Rect.fromCircle(center: arcCenter, radius: arcRadius);
-
-    // Draw the arc
-    paint.color = Colors.red;
-    paint.strokeWidth = 6.0;
-    paint.style = PaintingStyle.stroke;
-
-    final sweepAngle = pi / 5;
-
-    // Draw the arc
-    canvas.drawArc(
-        rect, (monthAngle - 15) * pi / 180, sweepAngle, false, paint);
+    canvas.restore();
   }
 
-  void _drawClockCircle(
+  // void _drawMonthIndicator(
+  //     Canvas canvas, double center, double radius, Paint paint) {
+  //   final now = DateTime.now();
+  //   // Calculate the angle for the current month
+  //   final monthAngle = (now.month - 3) * (360 / 12);
+  //
+  //   final indicatorLength = radius * 0.75;
+  //   final arcRadius = 10.0;
+  //
+  //   final arcCenter = Offset(
+  //     center + indicatorLength * cos(monthAngle * pi / 180),
+  //     center + indicatorLength * sin(monthAngle * pi / 180),
+  //   );
+  //
+  //   final rect = Rect.fromCircle(center: arcCenter, radius: arcRadius);
+  //
+  //   // Draw the arc
+  //   paint.color = Colors.red;
+  //   paint.strokeWidth = 6.0;
+  //   paint.style = PaintingStyle.stroke;
+  //
+  //   final sweepAngle = pi / 5;
+  //
+  //   // Draw the arc
+  //   canvas.drawArc(
+  //       rect, (monthAngle - 15) * pi / 180, sweepAngle, false, paint);
+  // }
+
+  void _drawWatchFace(
       Canvas canvas, Size size, Paint paint, double center, double radius) {
     // Load the background image
     final backgroundImage = AssetImage('assets/watchface.png');
@@ -141,16 +175,13 @@ class ClockPainter extends CustomPainter {
         Paint(),
       );
     }));
-
-    paint.strokeWidth = 2;
-    paint.color = Color(0xFFC0C0C0);
-    canvas.drawCircle(Offset(center, center), radius, paint);
   }
 
   void _drawClockHands(
       Canvas canvas, Size size, Paint paint, double center, double radius) {
     final now = DateTime.now();
-    final secondsAngle = (now.second + now.millisecond / 1000) * 6.0;
+    final monthAngle = (now.month) * (360 / 12);
+    //  final secondsAngle = (now.second + now.millisecond / 1000) * 6.0;
     final minutesAngle = (now.minute + now.second / 60) * 6.0;
     final hoursAngle = (now.hour % 12 + now.minute / 60) * 30.0;
 
@@ -158,8 +189,16 @@ class ClockPainter extends CustomPainter {
     _drawHand(
       canvas,
       Offset(center, center),
+      monthAngle,
+      radius * 0.42, // Length
+      2.8, // Base width
+      monthHandImage,
+    );
+    _drawHand(
+      canvas,
+      Offset(center, center),
       hoursAngle,
-      radius * 0.44, // Length
+      radius * 0.42, // Length
       2.8, // Base width
       hourHandImage, // Pass the hour hand image
     );
@@ -169,20 +208,20 @@ class ClockPainter extends CustomPainter {
       canvas,
       Offset(center, center),
       minutesAngle,
-      radius * 0.44, // Length
+      radius * 0.42, // Length
       2.8, // Base width
       minuteHandImage, // Pass the minute hand image
     );
 
-    // Draw second hand (same as before)
-    _drawSecondsPointer(
-      canvas,
-      Offset(center, center),
-      secondsAngle,
-      radius * 0.8, // Length
-      2.4, // Base width
-      paint,
-    );
+    // // Draw second hand (same as before)
+    // _drawSecondsPointer(
+    //   canvas,
+    //   Offset(center, center),
+    //   secondsAngle,
+    //   radius * 0.8, // Length
+    //   2.4, // Base width
+    //   paint,
+    // );
   }
 
   void _drawHand(
@@ -223,36 +262,36 @@ class ClockPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void _drawSecondsPointer(
-    Canvas canvas,
-    Offset center,
-    double angle,
-    double length,
-    double baseWidth,
-    Paint paint,
-  ) {
-    paint.style = PaintingStyle.stroke;
-    paint.strokeWidth = baseWidth;
-    paint.color = Color(0xFFC0C0C0);
-
-    // Convert angle to radians and adjust for clock orientation
-    final angleRad = (angle - 90) * pi / 180;
-
-    // Calculate the tip of the line
-    final tipPoint = Offset(
-      center.dx + length * cos(angleRad),
-      center.dy + length * sin(angleRad),
-    );
-
-    // Draw a line from the center to the tip for a straight seconds hand
-    canvas.drawLine(center, tipPoint, paint);
-
-    // Draw a circle at the pivot point
-    paint.color = Color(0xFFC0C0C0);
-    canvas.drawCircle(center, baseWidth * 2, paint);
-    paint.color = Color(0xFF000000);
-    canvas.drawCircle(center, baseWidth / 1.5, paint);
-  }
+  // void _drawSecondsPointer(
+  //   Canvas canvas,
+  //   Offset center,
+  //   double angle,
+  //   double length,
+  //   double baseWidth,
+  //   Paint paint,
+  // ) {
+  //   paint.style = PaintingStyle.stroke;
+  //   paint.strokeWidth = baseWidth;
+  //   paint.color = Color(0xFFC0C0C0);
+  //
+  //   // Convert angle to radians and adjust for clock orientation
+  //   final angleRad = (angle - 90) * pi / 180;
+  //
+  //   // Calculate the tip of the line
+  //   final tipPoint = Offset(
+  //     center.dx + length * cos(angleRad),
+  //     center.dy + length * sin(angleRad),
+  //   );
+  //
+  //   // Draw a line from the center to the tip for a straight seconds hand
+  //   canvas.drawLine(center, tipPoint, paint);
+  //
+  //   // Draw a circle at the pivot point
+  //   paint.color = Color(0xFFC0C0C0);
+  //   canvas.drawCircle(center, baseWidth * 2, paint);
+  //   paint.color = Color(0xFF000000);
+  //   canvas.drawCircle(center, baseWidth / 1.5, paint);
+  // }
 
   void _drawDay(Canvas canvas, double center, double radius, Paint paint) {
     final now = DateTime.now();

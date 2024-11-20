@@ -19,9 +19,14 @@ class MoonCard extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          'Currently',
-          style: TextStyle(fontSize: 14),
-        )
+          'Current Phase',
+          style: TextStyle(
+            letterSpacing: -.4,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0XFFA2811A),
+          ),
+        ),
       ],
     );
   }
