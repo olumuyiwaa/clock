@@ -309,7 +309,7 @@ class _ClockState extends State<Clock> {
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                     ],
                   ),
                   Container(
@@ -343,7 +343,7 @@ class _ClockState extends State<Clock> {
                         ),
                         Container(
                           width: .5,
-                          height: 78,
+                          height: 70,
                           color: Color(0XFFA2811A),
                         ),
                         Row(
